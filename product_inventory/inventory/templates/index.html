@@ -21,9 +21,33 @@
         {% csrf_token %}
         <input class="p-3 w-50 search mt-3" type="text" name="product" id="product" placeholder="Search">
     </form>
-    <div id='result-box ' class="results-card "></div>
+    <div id='result-box' class="results-card"></div>
 </div>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    {% comment %} $(function () {
+        $("#product").autocomplete({
+            source: '{% url 'index' %}'
+        });
+    }); {% endcomment %}
+    $(document).ready(function(){
+        $("#product").on('change input', function () {
+            value = $('#product').val();
+            console.log(value) 
+            if (value == ''){
+                $('#result-box').html('');
+             }
+             else{
+              $.ajax({url: '{% url 'search' %}',data: {term:value}, success: function(result){
+               $("#result-box").html(result);
+               
+             }
+             });
+             }
+        });
+      });
+</script>
+
 
 {% endblock content %}
