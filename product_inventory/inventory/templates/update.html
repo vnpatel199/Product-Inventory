@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Update {{product.product_name}}{% endblock title %}
+
+{% block content %}
+<form method="post", enctype="multipart/form-data" class="container p-3 my-3 bg-dark text-white" style="width:50%;">
+    {% csrf_token %}
+        <div class="form-group">
+            <label for="">Product Name</label>
+            <input class="form-control" type="text" id="product_name" name="product_name" value="{{product.product_name}}" readonly>
+            <br>
+            <label for="">Quantity</label>
+            <input class="form-control" type="number" id="quantity" name="quantity" value="{{product.quantity}}" required>
+            <br>
+            <label for="">Price</label>
+            <input class="form-control" type="number" id="price" name="price" value="{{product.price}}" step="any" required>
+            <br>
+        </div>    
+            <button type="submit" class="btn btn-primary" style="margin-top:10px;">Update</button>
+        
+    </form>
+{% endblock content %}

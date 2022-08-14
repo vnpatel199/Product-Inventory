@@ -26,7 +26,7 @@
 
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/login">Login</a>
+        <a class="navbar-brand" href="/login/">Login</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
     </button>
@@ -38,7 +38,7 @@
         {% csrf_token %}
         <input class="p-3 w-50 search mt-3" type="text" name="product" id="product" placeholder="Search">
     </form>
-    <div id='result-box' class="result-card"></div>
+    <div id='result-box' class="result-card not-visible"></div>
 </div>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -50,21 +50,20 @@
             console.log(value) 
             if (value == ''){
                 $('#result-box').html('');
+                $(".result-card").addClass('not-visible');
             }
             else{
                 $.ajax({
                     url: '{% url 'search' %}',
                     data: {term:value},
                     success:(request) => {
+                        $("#result-box").html("")
                         data = request.data
-                        if(Array.isArray(data)){
-                            data.forEach(term =>{
-                                $("#result-box").html(`<div class='row mt-2 mb-2'><div class='col-2'><img src="${term.image}" class='pro'></div><div class='col'><h2>${term.name}</h2></div><div class='col'><h3>$${term.price}</h3></div></div>`);
-                            })
-                        }
-                        else{
-                            $(".result-card").classList.add('not-visible');
-                        }
+                        console.log(data.length)
+                        data.forEach(term =>{
+                            $("#result-box").append(`<div class='row mt-2 mb-2'><div class='col-2'><img src="${term.image}" class='pro'></div><div class='col'><h2>${term.name}</h2></div><div class='col'><h3>$${term.price}</h3></div></div>`);
+                            $(".result-card").removeClass('not-visible');
+                        })
                     }
                 });
                 
