@@ -1,6 +1,5 @@
-import re
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product
+from .models import Bill, Customer, Product
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
@@ -50,15 +49,14 @@ def Logout(request):
 @login_required(login_url='/login/')
 def home(request):
     product = Product.objects.all()
-    print(product)
     return render(request, "home.html",{
         "product": product
     })
 
 @login_required(login_url='/login/')
-def detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, "detail.html", {'product':product})
+def delete(request, pk):
+    Product.objects.filter(id=pk).delete()
+    return redirect('home')
 
 @login_required(login_url='/login/')
 def update(request, pk):
@@ -67,9 +65,22 @@ def update(request, pk):
         product_name = request.POST['product_name']
         quantity = request.POST['quantity']
         price = request.POST['price']
-        update = Product.objects.filter(pk=pk).update(product_name=product_name,quantity=quantity ,price=price)
+        Product.objects.filter(pk=pk).update(product_name=product_name,quantity=quantity ,price=price)
         return redirect('home')
 
     return render(request, "update.html", {'product':product})
 
+@login_required(login_url='/login/')
+def bill(request):
+    customer = Customer.objects.all()
+    if request.method == "POST":
+        id = request.POST.get('customer_name')
+        customer_name = Customer.objects.get(id=id)
+        date =request.POST['date']
+
+        bill=Bill.objects.create(customer_name=customer_name, date = date)
+        bill.save()
+    return render(request, "bill.html", {
+        "customer":customer
+    })
 

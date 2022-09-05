@@ -40,17 +40,25 @@ class Customer(models.Model):
     customer_name = models.CharField(max_length=60)
     phone_number = models.IntegerField()
     gst_number = models.IntegerField()
+    
+    def __str__(self):
+        return f'{self.customer_name}'
 
 
 class Bill(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date = models.DateField()
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    gst_amount = models.DecimalField(max_digits=4, decimal_places=2)
+
+    def __str__(self):
+            return f'{self.pk}'
 
 
 class BillRows(models.Model):
     bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    gst_amount = models.DecimalField(max_digits=4, decimal_places=2)
+
+
+    def __str__(self):
+            return f'{self.bill_id}'
